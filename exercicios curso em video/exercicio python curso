@@ -1,0 +1,50 @@
+# prompt: crie um script para rastrear novas ações e novas crypto moedas listadas em todas as bolsas mundiais  nos ultimos 6 meses
+!pip install pandas
+import pandas as pd
+import requests
+from bs4 import BeautifulSoup
+
+# Define the list of stock exchanges to track
+exchanges = ['NYSE', 'NASDAQ', 'TSX', 'LSE', 'HKEX', 'SSE', 'SZSE', 'TSE', 'ASX', 'BSE', 'NSE']
+
+# Create a dictionary to store the new listings for each exchange
+new_listings = {}
+
+# Iterate over the list of exchanges
+for exchange in exchanges:
+    # Get the URL of the exchange's website
+    url = f'https://www.barchart.com/stocks/listings/{exchange}'
+
+    # Make a request to the URL
+    response = requests.get(url)
+
+    # Parse the HTML content of the response
+    soup = BeautifulSoup(response.content, 'html.parser')
+
+    # Find the table containing the new listings
+    table = soup.find('table', {'id': 'newListingsTable'})
+
+    # Extract the data from the table
+    rows = table.find_all('tr')
+    for row in rows[1:]:
+        columns = row.find_all('td')
+        ticker = columns[0].text.strip()
+        name = columns[1].text.strip()
+        date = columns[2].text.strip()
+
+        # Add the new listing to the dictionary
+        if exchange not in new_listings:
+            new_listings[exchange] = []
+        new_listings[exchange].append({'ticker': ticker, 'name': name, 'date': date})
+
+# Create a Pandas DataFrame from the dictionary of new listings
+df = pd.DataFrame(new_listings).T
+
+# Convert the 'date' column to a datetime object
+df['date'] = pd.to_datetime(df['date'])
+
+# Filter the DataFrame to only include listings from the last 6 months
+df = df[df['date'] >= pd.Timestamp.today() - pd.Timedelta(days=180)]
+
+# Print the DataFrame
+print(df)

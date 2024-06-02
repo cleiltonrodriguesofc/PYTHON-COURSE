@@ -1,0 +1,7 @@
+name = input('Enter a name: ').upper().strip()
+count = name.count('A')
+print(F'The letter A appears {count} times.')  
+first_position = name.find('A')
+print(f'The letter A appears the first time in the {first_position + 1}° position in the name.')
+last_position = name.rfind('A')
+print(f'The letter A appears the last time in the {last_position + 1}° position in the name.')
