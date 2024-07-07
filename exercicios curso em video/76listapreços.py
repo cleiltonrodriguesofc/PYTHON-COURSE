@@ -1,5 +1,5 @@
 '''Crie um programa que tenha uma tupla única com nomes de produtos e seus respectivos 
-preços, na sequência. No final, mostre uma listagem de preços, organizando os dados em forma 
+preços, na sequência. No final, mostre uma listagem de preços, organizando os dados.txt em forma
 tabular.'''
 products = ('Arroz', 31, 'Feijão', 9, 'Sabão', 7, 'Café', 7.5, 'Biscoito', 5.55)
 print('='*43)
